@@ -1,8 +1,7 @@
 <script lang="ts">
   import type { Pokemon } from "../domain/entities/Pokemon";
-  export let video: string = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
+  import { Link } from "svelte-routing";
   export let pokemon: Pokemon;
-  console.log("Rendering Generation with:", pokemon.name.fr);
 </script>
 
 <div
@@ -10,13 +9,13 @@
 >
   <div class="md:flex">
     <div class="md:flex-shrink-0">
-      <a href={video} target="_blank" rel="noreferrer">
+      <Link to="/{pokemon.name.fr}">
         <img
           class="h-48 w-full object-cover md:w-48 transition-transform duration-300 transform hover:scale-105"
           src={pokemon.sprites.regular}
           alt="Pokémon Logo"
         />
-      </a>
+      </Link>
     </div>
     <div class="p-8">
       <div
