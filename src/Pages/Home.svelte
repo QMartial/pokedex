@@ -24,7 +24,7 @@
 </script>
 
 <main
-  class="min-h-screen bg-gradient-to-r from-red-200 via-yellow-100 to-yellow-50 flex flex-col items-center justify-center p-4"
+  class="min-h-screen bg-gradient-to-r from-blue-800 to-blue-200 flex flex-col items-center justify-center p-4"
 >
   <div class="mb-8">
     <a
