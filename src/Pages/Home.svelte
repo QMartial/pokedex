@@ -41,9 +41,6 @@
       />
     </a>
   </div>
-  <h1 class="text-4xl font-bold text-center text-red-600">
-    Bienvenue dans le monde Pokémon
-  </h1>
   <Search {pokemon_list} {update_pokemon} />
   <div class="mb-8 grid grid-cols-3 gap-4">
     {#each display_pokemon as pokemon}

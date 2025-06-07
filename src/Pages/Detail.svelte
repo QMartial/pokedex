@@ -2,6 +2,7 @@
   import { onMount } from "svelte";
   import type { Pokemon } from "../domain/entities/Pokemon";
   import { Api } from "../infrastructure/api/api";
+  import { Tools } from "../tools/utils";
   export let pokemon_name: string;
   type NestedObject = { [key: string]: any };
   let flattenPokemon: NestedObject = {};
@@ -38,24 +39,7 @@
     }
     return result;
   }
-  function check_image(url: unknown): boolean {
-    if (typeof url == "string") {
-      if (url.startsWith("https")) {
-        return true;
-      }
-    }
-    console.log({ url });
-    return false;
-  }
-  function isNotStringArray(arr: any[]): boolean {
-    // Vérifie si tous les éléments du tableau sont des chaînes de caractères
-    const allElementsAreStrings = arr.every(
-      (element) => typeof element === "string"
-    );
 
-    // Retourne true si au moins un élément n'est pas une chaîne de caractères
-    return !allElementsAreStrings;
-  }
   onMount(async () => {
     const pokemon = await get_one_pokemon();
     flattenPokemon = flattenObject(pokemon);
@@ -66,8 +50,8 @@
   class="min-h-screen bg-gradient-to-r from-blue-800 to-blue-200 flex flex-col items-center justify-center p-4"
 >
   <div class="mb-8 w-full flex flex-col items-center">
-    <h1 class="text-4xl font-bold text-center text-red-600">
-      Détails du Pokémon
+    <h1 class="text-4xl font-bold text-center text-black">
+      {pokemon_name}
     </h1>
     <div
       class="w-4/5 mb-8 grid grid-cols-2 gap-4 rounded-xl shadow-md overflow-hidden p-4"
@@ -76,21 +60,27 @@
         {#if flattenPokemon[key as keyof typeof flattenPokemon]}
           <div class="bg-white rounded p-2">
             <strong>{key}</strong>
-            {#if Array.isArray(flattenPokemon[key as keyof typeof flattenPokemon]) && isNotStringArray(flattenPokemon[key as keyof typeof flattenPokemon])}
-              <div class="flex flex-row text-center">
+            {#if Array.isArray(flattenPokemon[key as keyof typeof flattenPokemon]) && Tools.isNotStringArray(flattenPokemon[key as keyof typeof flattenPokemon])}
+              <div
+                class="grid grid-cols-{Tools.diviseur_plus_proche_de_racine(
+                  flattenPokemon[key as keyof typeof flattenPokemon].length
+                )} text-center"
+              >
                 {#each Object.values(flattenPokemon[key as keyof typeof flattenPokemon]) as keyArray}
-                  <div class="w-full overflow-hidden">
+                  <div class="w-full m-1">
                     {#each Object.values(keyArray as any[]) as i}
-                      {#if check_image(i)}
+                      {#if Tools.check_url(i)}
                         <img class="w-[2em]" src={i} alt={i} />
+                      {:else if typeof i == "boolean"}
+                        <div></div>
                       {:else}
-                        <div class="w-full">{i}</div>
+                        <div class="w-full m-1 p-1">{i}</div>
                       {/if}
                     {/each}
                   </div>
                 {/each}
               </div>
-            {:else if check_image(flattenPokemon[key as keyof typeof flattenPokemon])}
+            {:else if Tools.check_url(flattenPokemon[key as keyof typeof flattenPokemon])}
               <img
                 class="w-[10em]"
                 src={flattenPokemon[key as keyof typeof flattenPokemon]}
@@ -107,3 +97,5 @@
     </div>
   </div>
 </main>
+
+<!-- <pre>{JSON.stringify(flattenPokemon, null, 2)}</pre> -->
